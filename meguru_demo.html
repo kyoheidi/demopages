@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEGURU — コーヒー体験デザイン デモ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1E1712;
+  --paper:#FBF7F0;
+  --cream:#F1E9D8;
+  --coffee:#4A2E22;
+  --coffee-light:#8A6A54;
+  --honey:#D9A441;
+  --honey-dark:#B27C25;
+  --sage:#6E8B6B;
+  --sage-dark:#4F6B4C;
+  --line: rgba(30,23,18,.14);
+  --line-soft: rgba(30,23,18,.08);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Zen Kaku Gothic New", sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.serif{font-family:"Shippori Mincho", serif;}
+.mono{font-family:"DM Mono", monospace; letter-spacing:.02em;}
+img{max-width:100%;}
+.wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+a{color:inherit;}
+button{font-family:inherit; cursor:pointer;}
+
+/* ---------- NAV ---------- */
+.topnav{
+  position:sticky; top:0; z-index:50;
+  background:rgba(251,247,240,.88); backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line-soft);
+}
+.topnav .wrap{display:flex; align-items:center; justify-content:space-between; padding-top:16px; padding-bottom:16px;}
+.brand{font-family:"Shippori Mincho",serif; font-size:20px; font-weight:700; letter-spacing:.06em;}
+.brand span{color:var(--honey-dark);}
+.topnav-tag{font-size:12px; color:var(--coffee-light); letter-spacing:.08em;}
+
+/* ---------- HERO ---------- */
+.hero{position:relative; overflow:hidden; padding:110px 0 90px; background:var(--ink); color:var(--paper);}
+.hero-rings{position:absolute; right:-120px; top:-120px; width:520px; height:520px; opacity:.5;}
+.hero-rings circle{fill:none; stroke:var(--honey); stroke-width:1;}
+.hero .eyebrow{font-size:12px; letter-spacing:.24em; color:var(--honey); text-transform:uppercase; margin-bottom:18px;}
+.hero h1{font-size:44px; line-height:1.5; margin:0 0 22px; max-width:760px;}
+.hero p.lead{font-size:16px; line-height:1.9; color:#D8CFC2; max-width:560px; margin:0 0 34px;}
+.hero-cta{display:inline-flex; align-items:center; gap:10px; background:var(--honey); color:var(--ink); border:none; padding:14px 26px; border-radius:999px; font-weight:700; font-size:14px;}
+.hero-cta:hover{background:#E9B75B;}
+.hero-meta{margin-top:56px; display:flex; gap:40px; flex-wrap:wrap;}
+.hero-meta div{border-left:1px solid rgba(255,255,255,.2); padding-left:16px;}
+.hero-meta .k{font-size:11px; color:#B7ADA0; letter-spacing:.1em;}
+.hero-meta .v{font-family:"DM Mono",monospace; font-size:15px; margin-top:4px;}
+
+/* ---------- SECTION SHARED ---------- */
+section{padding:88px 0;}
+.section-head{max-width:640px; margin-bottom:52px;}
+.section-head .eyebrow{font-size:12px; letter-spacing:.2em; color:var(--sage-dark); text-transform:uppercase; margin-bottom:14px; font-weight:700;}
+.section-head h2{font-size:30px; line-height:1.55; margin:0 0 16px;}
+.section-head p{font-size:15px; line-height:1.9; color:var(--coffee-light); margin:0;}
+
+/* ---------- PROBLEM CARDS ---------- */
+.problem-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-bottom:40px;}
+.problem-card{background:var(--cream); border-radius:18px; padding:28px 24px; border:1px solid var(--line-soft);}
+.problem-card .q{font-family:"Shippori Mincho",serif; font-size:17px; margin:0 0 10px; color:var(--coffee);}
+.problem-card p{font-size:13.5px; line-height:1.8; color:var(--coffee-light); margin:0;}
+.reframe{background:var(--coffee); color:var(--paper); border-radius:18px; padding:32px 34px; font-family:"Shippori Mincho",serif; font-size:19px; line-height:1.9;}
+.reframe b{color:var(--honey);}
+
+/* ---------- PILLARS ---------- */
+.pillars{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+.pillar{border:1px solid var(--line); border-radius:16px; padding:26px 20px; background:#fff;}
+.pillar .num{font-family:"DM Mono",monospace; font-size:12px; color:var(--honey-dark); margin-bottom:14px;}
+.pillar h3{font-size:16px; margin:0 0 10px; line-height:1.5;}
+.pillar p{font-size:12.5px; line-height:1.75; color:var(--coffee-light); margin:0;}
+
+/* ---------- DEMO ---------- */
+.demo-section{background:var(--cream);}
+.demo-layout{display:grid; grid-template-columns:390px 1fr; gap:56px; align-items:start;}
+
+.phone{
+  width:375px; height:760px; background:var(--ink); border-radius:44px; padding:14px;
+  box-shadow:0 30px 60px -20px rgba(30,23,18,.4); position:sticky; top:100px;
+}
+.phone-inner{
+  width:100%; height:100%; background:var(--paper); border-radius:32px; overflow:hidden; position:relative;
+  display:flex; flex-direction:column;
+}
+.phone-notch{position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:22px; background:var(--ink); border-radius:0 0 14px 14px; z-index:5;}
+.phone-topbar{padding:34px 22px 10px; display:flex; align-items:center; justify-content:space-between;}
+.phone-eyebrow{font-size:10px; letter-spacing:.14em; color:var(--coffee-light); text-transform:uppercase;}
+.dots{display:flex; gap:5px;}
+.dots span{width:5px; height:5px; border-radius:50%; background:var(--line);}
+.dots span.on{background:var(--honey-dark);}
+
+.screen-area{flex:1; overflow-y:auto; padding:6px 22px 26px;}
+.screen{display:none; flex-direction:column; gap:16px; animation:fadein .35s ease;}
+.screen.active{display:flex;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.screen h3.title{font-size:20px; margin:2px 0 0; line-height:1.5;}
+.badge-row{display:flex; gap:6px; flex-wrap:wrap;}
+.badge{font-size:11px; background:var(--cream); color:var(--coffee); padding:5px 10px; border-radius:999px; border:1px solid var(--line-soft);}
+.badge.honey{background:rgba(217,164,65,.18); color:var(--honey-dark); border-color:transparent;}
+.badge.sage{background:rgba(110,139,107,.16); color:var(--sage-dark); border-color:transparent;}
+
+.bag-art{width:100%; height:150px; border-radius:16px; background:linear-gradient(160deg,#2A1D16,#4A2E22); position:relative; overflow:hidden;}
+.bag-art svg{position:absolute; inset:0;}
+
+.cup-toggle{display:flex; gap:10px;}
+.cup-btn{flex:1; padding:14px 0; text-align:center; border-radius:12px; border:1.5px solid var(--line); background:#fff; font-weight:700; font-size:14px;}
+.cup-btn.selected{border-color:var(--honey-dark); background:rgba(217,164,65,.14); color:var(--honey-dark);}
+.cup-btn .sub{display:block; font-size:11px; font-weight:400; color:var(--coffee-light); margin-top:3px;}
+
+.spec-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.spec-cell{background:#fff; border:1px solid var(--line-soft); border-radius:12px; padding:14px;}
+.spec-cell .k{font-size:11px; color:var(--coffee-light);}
+.spec-cell .v{font-family:"DM Mono",monospace; font-size:20px; margin-top:4px; color:var(--coffee);}
+.spec-note{font-size:11.5px; color:var(--coffee-light); line-height:1.7; background:var(--cream); padding:12px 14px; border-radius:10px;}
+
+.tool-list{display:flex; flex-direction:column; gap:8px;}
+.tool-row{display:flex; align-items:center; gap:10px; font-size:13px; padding:8px 0; border-bottom:1px solid var(--line-soft);}
+.tool-row .dot{width:6px;height:6px;border-radius:50%;background:var(--sage);}
+.tool-row small{color:var(--coffee-light); margin-left:auto; font-size:11px;}
+
+.btn-primary{background:var(--coffee); color:var(--paper); border:none; padding:15px; border-radius:12px; font-weight:700; font-size:14px; width:100%;}
+.btn-primary:disabled{opacity:.45;}
+.btn-ghost{background:transparent; border:1.5px solid var(--line); color:var(--coffee); padding:13px; border-radius:12px; font-weight:700; font-size:13px; width:100%;}
+
+.step-progress{font-size:11px; color:var(--honey-dark); font-weight:700; letter-spacing:.08em;}
+.pour-stage{display:flex; flex-direction:column; align-items:center; gap:10px; padding:8px 0 4px;}
+.pour-illustration{width:150px; height:150px; position:relative;}
+.pour-illustration .cone{position:absolute; inset:0;}
+.arrow-swirl{transform-origin:75px 75px; transition:opacity .3s;}
+.pour-illustration.waiting .arrow-swirl{opacity:0;}
+.pour-illustration.pouring .arrow-swirl{animation:swirl 4.4s linear infinite;}
+.steam{opacity:0; transition:opacity .4s;}
+.pour-illustration.waiting .steam{opacity:1;}
+.steam path{animation:rise 2.6s ease-in-out infinite;}
+.steam path:nth-child(2){animation-delay:.5s;}
+.steam path:nth-child(3){animation-delay:1s;}
+@keyframes rise{
+  0%{transform:translateY(4px); opacity:0;}
+  30%{opacity:.7;}
+  100%{transform:translateY(-14px); opacity:0;}
+}
+@keyframes swirl{from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
+.fill-disc{transition:transform .4s ease; transform-origin:75px 75px;}
+
+.amount-readout{display:flex; align-items:baseline; justify-content:center; gap:6px;}
+.amount-readout .cur{font-family:"DM Mono",monospace; font-size:34px; color:var(--coffee);}
+.amount-readout .tgt{font-family:"DM Mono",monospace; font-size:16px; color:var(--coffee-light);}
+.brew-note{font-size:13px; text-align:center; color:var(--coffee-light); line-height:1.7; padding:0 6px;}
+
+.phase-label{display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:-4px;}
+.phase-pill{font-size:12px; font-weight:700; padding:6px 16px; border-radius:999px; letter-spacing:.05em; background:var(--line-soft); color:var(--coffee-light); transition:.25s;}
+.phase-pill.pour{background:rgba(217,164,65,.2); color:var(--honey-dark);}
+.phase-pill.wait{background:rgba(110,139,107,.18); color:var(--sage-dark);}
+.timer-wrap{display:flex; justify-content:center; position:relative;}
+.timer-ring{width:140px; height:140px; transform:rotate(-90deg);}
+.timer-ring circle{fill:none; stroke-width:8;}
+.timer-bg{stroke:var(--line);}
+.timer-progress{stroke:var(--honey-dark); stroke-linecap:round; transition:stroke-dashoffset .3s linear, stroke .25s;}
+.timer-progress.phase-wait{stroke:var(--sage-dark);}
+.timer-center{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column;}
+.timer-center .num{font-family:"DM Mono",monospace; font-size:30px; color:var(--coffee);}
+.timer-center .lbl{font-size:10px; color:var(--coffee-light); letter-spacing:.1em; margin-top:2px;}
+.skip-btn{background:none; border:none; color:var(--coffee-light); font-size:12px; text-decoration:underline; text-underline-offset:3px; padding:4px; align-self:center;}
+.good-row{display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid var(--line-soft); border-radius:12px; padding:14px 16px;}
+.good-row .label{font-size:13px;}
+.good-row .label small{display:block; color:var(--coffee-light); font-size:11px; margin-top:2px;}
+.good-btn{display:flex; align-items:center; gap:6px; border:1.5px solid var(--line); background:#fff; border-radius:999px; padding:8px 16px; font-size:13px; font-weight:700; color:var(--coffee-light);}
+.good-btn.on{border-color:var(--honey-dark); background:rgba(217,164,65,.16); color:var(--honey-dark);}
+
+.enjoy-hero{text-align:center; padding:10px 0 4px;}
+.enjoy-hero h3{font-size:26px; margin:0 0 8px;}
+.enjoy-hero p{font-size:12.5px; color:var(--coffee-light); margin:0;}
+.column-card{background:#fff; border:1px solid var(--line-soft); border-radius:14px; padding:16px;}
+.column-card .tag{font-size:10.5px; color:var(--sage-dark); font-weight:700; letter-spacing:.06em; margin-bottom:6px; display:block;}
+.column-card h4{font-size:14px; margin:0 0 6px;}
+.column-card p{font-size:12.5px; line-height:1.75; color:var(--coffee-light); margin:0;}
+
+.flavor-tags{display:flex; flex-wrap:wrap; gap:8px;}
+.tag-chip{font-size:12px; padding:8px 13px; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--coffee-light);}
+.tag-chip.on{border-color:var(--sage-dark); background:rgba(110,139,107,.14); color:var(--sage-dark); font-weight:700;}
+textarea.comment-input{width:100%; border:1.5px solid var(--line); border-radius:12px; padding:12px; font-size:13px; font-family:inherit; resize:none; height:64px;}
+.comment-card{background:#fff; border:1px solid var(--line-soft); border-radius:12px; padding:12px 14px;}
+.comment-card .who{font-size:12px; font-weight:700; display:flex; justify-content:space-between; color:var(--coffee);}
+.comment-card .who small{font-weight:400; color:var(--coffee-light);}
+.comment-card p{font-size:12.5px; line-height:1.7; margin:6px 0 8px; color:var(--coffee-light);}
+.comment-card .tag-chip{font-size:10px; padding:4px 9px; pointer-events:none;}
+
+.stamp-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+.stamp{aspect-ratio:1; border-radius:12px; border:1.5px dashed var(--line); display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--line);}
+.stamp.filled{border-style:solid; border-color:var(--honey-dark); background:rgba(217,164,65,.14); color:var(--honey-dark);}
+.stamp.new{animation:pop .5s ease;}
+@keyframes pop{0%{transform:scale(.5); opacity:0;} 70%{transform:scale(1.12);} 100%{transform:scale(1); opacity:1;}}
+.history-row{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--line-soft); font-size:12.5px;}
+.history-row .name{font-weight:700; color:var(--coffee);}
+.history-row .date{color:var(--coffee-light); font-family:"DM Mono",monospace; font-size:11px;}
+
+.notif-preview{background:var(--ink); color:var(--paper); border-radius:14px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start;}
+.notif-preview .ic{width:30px;height:30px;border-radius:9px;background:var(--honey); flex-shrink:0;}
+.notif-preview .body strong{font-size:12.5px;}
+.notif-preview .body p{font-size:11.5px; margin:4px 0 0; color:#D8CFC2; line-height:1.6;}
+.toggle-row{display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid var(--line-soft); border-radius:12px; padding:12px 14px; font-size:13px;}
+.switch{width:40px; height:22px; border-radius:999px; background:var(--line); position:relative; transition:.2s;}
+.switch.on{background:var(--sage-dark);}
+.switch::after{content:"";position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; transition:.2s;}
+.switch.on::after{transform:translateX(18px);}
+
+/* ---------- ANNOTATION PANEL ---------- */
+.annotate{padding-top:8px;}
+.annotate .stepno{font-family:"DM Mono",monospace; font-size:12px; color:var(--honey-dark); margin-bottom:10px;}
+.annotate h3{font-size:24px; margin:0 0 16px; line-height:1.5;}
+.annotate ul{margin:0 0 30px; padding:0; list-style:none;}
+.annotate li{display:flex; gap:12px; font-size:14px; line-height:1.85; color:var(--coffee-light); margin-bottom:12px;}
+.annotate li::before{content:"—"; color:var(--honey-dark); flex-shrink:0;}
+.progress-bar{height:2px; background:var(--line); border-radius:2px; overflow:hidden; margin-bottom:34px;}
+.progress-bar .fill{height:100%; background:var(--honey-dark); transition:width .4s ease;}
+
+/* ---------- MOAT ---------- */
+.moat-flow{display:flex; align-items:stretch; gap:0; margin-bottom:36px;}
+.moat-flow .moat-box{flex:1;}
+.moat-flow .moat-arrow{flex:0 0 auto; padding:0 14px;}
+.moat-box{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 16px; position:relative;}
+.moat-box .k{font-size:10.5px; color:var(--honey-dark); font-weight:700; letter-spacing:.08em; margin-bottom:8px;}
+.moat-box p{font-size:12.5px; line-height:1.7; color:var(--coffee-light); margin:0;}
+.moat-arrow{display:flex; align-items:center; justify-content:center; color:var(--line);}
+.moat-quote{font-family:"Shippori Mincho",serif; font-size:20px; line-height:1.85; color:var(--coffee); border-left:3px solid var(--honey); padding-left:22px;}
+
+/* ---------- ROADMAP ---------- */
+.foundation-card{background:var(--coffee); color:var(--paper); border-radius:18px; padding:32px 34px; margin-bottom:28px;}
+.foundation-card .k{font-size:11px; letter-spacing:.14em; color:var(--honey); text-transform:uppercase; margin-bottom:12px; font-weight:700;}
+.foundation-card h3{font-size:22px; margin:0 0 12px;}
+.foundation-card p{font-size:13.5px; line-height:1.8; color:#D8CFC2; margin:0; max-width:520px;}
+.branch-head{font-size:13px; color:var(--coffee-light); font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:10px;}
+.branch-head::before{content:""; width:22px; height:1px; background:var(--line);}
+.branch-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-bottom:18px;}
+.branch-card{border:1px solid var(--line); border-radius:14px; padding:22px 20px; background:#fff;}
+.branch-card h4{font-size:15px; margin:0 0 8px;}
+.branch-card p{font-size:12.5px; color:var(--coffee-light); line-height:1.7; margin:0;}
+.branch-note{font-size:12.5px; color:var(--coffee-light); line-height:1.8; max-width:640px; margin:0;}
+
+footer{padding:50px 0; border-top:1px solid var(--line-soft); font-size:12px; color:var(--coffee-light); text-align:center;}
+
+@media (max-width:980px){
+  .demo-layout{grid-template-columns:1fr;}
+  .phone{margin:0 auto; position:relative; top:0;}
+  .problem-grid,.pillars{grid-template-columns:1fr 1fr;}
+  .branch-grid{grid-template-columns:1fr;}
+  .moat-flow{flex-direction:column;}
+  .moat-arrow{transform:rotate(90deg); padding:6px 0;}
+  .hero h1{font-size:32px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <div class="brand">MEGURU<span>.</span></div>
+    <div class="topnav-tag">社内検討用デモ / Coffee EC Concept</div>
+  </div>
+</nav>
+
+<header class="hero">
+  <svg class="hero-rings" viewBox="0 0 520 520"><circle cx="260" cy="260" r="240"/><circle cx="260" cy="260" r="180"/><circle cx="260" cy="260" r="120"/></svg>
+  <div class="wrap">
+    <div class="eyebrow">New Business Concept — Coffee EC</div>
+    <h1>「わからない」をなくせば、<br>家のコーヒーはもっと好きになる。</h1>
+    <p class="lead">売って終わりのECではなく、淹れて・味わい・記録するまでを届ける。バリスタの淹れ方をそのまま再現できる仕組みを、自社のデジタル力でつくる。</p>
+    <button class="hero-cta" onclick="document.getElementById('demo').scrollIntoView()">デモを見る ↓</button>
+    <div class="hero-meta">
+      <div><div class="k">PHASE</div><div class="v">01 / EC</div></div>
+      <div><div class="k">FORMAT</div><div class="v">Web App</div></div>
+      <div><div class="k">SAMPLE</div><div class="v">Costa Rica Jaguar Honey</div></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Why</div>
+      <h2>人は、なぜ自分でコーヒーを淹れないのか。</h2>
+      <p>コンビニコーヒーの質が上がっていることや、そこまでこだわらないという声もある。それは正しい。その上で、もともとコーヒーが好きで毎日飲んでいる人に、もっと好きになってもらう体験をつくる。</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card"><p class="q">器具がない</p><p>ドリッパーもケトルも持っていない。買うほどではないと感じている。</p></div>
+      <div class="problem-card"><p class="q">淹れ方がわからない</p><p>お湯の温度も、粉の量も、注ぎ方も自己流。正解が見えない。</p></div>
+      <div class="problem-card"><p class="q">コンビニで十分</p><p>手軽さでは勝てない。だからこそ、手間の先にある体験で勝負する。</p></div>
+    </div>
+    <div class="reframe">
+      売るのは豆だけでなく、<b>「淹れて、味わい、記録する」</b>までの一杯の体験。<br>そのための答えを、こちらから渡す。
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Experience Pillars</div>
+      <h2>ECの上に、4つの体験を積む。</h2>
+    </div>
+    <div class="pillars">
+      <div class="pillar"><div class="num">01</div><h3>正しい淹れ方で味わえる</h3><p>バリスタが監修したレシピを、その通りになぞるだけで再現できる。</p></div>
+      <div class="pillar"><div class="num">02</div><h3>産地や歴史を知りながら飲める</h3><p>農園、栽培者、精製方法。一杯の背景を知ることも体験の一部にする。</p></div>
+      <div class="pillar"><div class="num">03</div><h3>感じたことをシェアできる</h3><p>香り、味、思い出したこと。ひとりの感想が、誰かの発見になる。</p></div>
+      <div class="pillar"><div class="num">04</div><h3>飲んだ記録が、積み重ねる楽しさになる</h3><p>お酒や御朱印のように、日本人はもともと「記録・収集」が好き。スタンプのように残る記録は、レコメンドのためのデータである以前に、振り返る楽しさそのものになる。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section" id="demo">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Interactive Demo</div>
+      <h2>「コスタリカ ジャガーハニー」を、実際に淹れてみる。</h2>
+      <p>右のパネルは各画面の意図の解説です。左のスマートフォンを実際に操作して、一杯分の体験を最初から最後まで進めてみてください。</p>
+    </div>
+
+    <div class="demo-layout">
+      <!-- PHONE -->
+      <div class="phone">
+        <div class="phone-inner">
+          <div class="phone-notch"></div>
+          <div class="phone-topbar">
+            <span class="phone-eyebrow" id="phoneEyebrow">商品ページ</span>
+            <div class="dots" id="dots"></div>
+          </div>
+
+          <div class="screen-area">
+
+            <!-- 1. PRODUCT -->
+            <div class="screen active" data-screen="product">
+              <div class="bag-art">
+                <svg viewBox="0 0 375 150" preserveAspectRatio="none">
+                  <defs><radialGradient id="g1" cx="30%" cy="30%" r="80%"><stop offset="0%" stop-color="#7A5033"/><stop offset="100%" stop-color="#2A1D16"/></radialGradient></defs>
+                  <rect width="375" height="150" fill="url(#g1)"/>
+                  <circle cx="300" cy="40" r="70" fill="none" stroke="#D9A441" stroke-opacity=".35" stroke-width="1"/>
+                  <circle cx="300" cy="40" r="95" fill="none" stroke="#D9A441" stroke-opacity=".2" stroke-width="1"/>
+                  <text x="24" y="90" fill="#F1E9D8" font-size="20" font-family="Shippori Mincho, serif">Costa Rica</text>
+                  <text x="24" y="115" fill="#D9A441" font-size="13" font-family="Zen Kaku Gothic New, sans-serif">Jaguar Honey</text>
+                </svg>
+              </div>
+              <h3 class="title serif">コスタリカ ジャガーハニー</h3>
+              <div class="badge-row">
+                <span class="badge honey">ハニープロセス</span>
+                <span class="badge sage">エル・ジャガー農園</span>
+                <span class="badge">はちみつ / オレンジ / キャラメル</span>
+              </div>
+              <div>
+                <div class="spec-cell" style="margin-bottom:10px;"><div class="k">杯数を選ぶ</div></div>
+                <div class="cup-toggle">
+                  <button class="cup-btn selected" data-cups="1" onclick="setCups(1)">1杯分<span class="sub">豆15g・湯240ml</span></button>
+                  <button class="cup-btn" data-cups="2" onclick="setCups(2)">2杯分<span class="sub">豆30g・湯480ml</span></button>
+                </div>
+              </div>
+              <button class="btn-primary" onclick="goScreen('prep')">淹れ方をひらく</button>
+              <button class="btn-ghost" onclick="goScreen('enjoy')">今日はサクッと記録だけ</button>
+            </div>
+
+            <!-- 2. PREP -->
+            <div class="screen" data-screen="prep">
+              <h3 class="title serif">はじめる前に</h3>
+              <div class="spec-note">はかりや温度計はご自宅にあるものでOKです。なければ、目安の秒数だけでも大丈夫。</div>
+              <div class="spec-grid">
+                <div class="spec-cell"><div class="k">粉の量</div><div class="v" id="prepCoffee">15g</div></div>
+                <div class="spec-cell"><div class="k">お湯の量</div><div class="v" id="prepWater">240ml</div></div>
+                <div class="spec-cell"><div class="k">お湯の温度</div><div class="v">92℃</div></div>
+                <div class="spec-cell"><div class="k">沸騰後</div><div class="v">90秒待つ</div></div>
+              </div>
+              <div class="tool-list">
+                <div class="tool-row"><span class="dot"></span>ドリッパー(V60)<small>お持ちのものでOK</small></div>
+                <div class="tool-row"><span class="dot"></span>ペーパーフィルター<small>お持ちのものでOK</small></div>
+                <div class="tool-row"><span class="dot"></span>ケトル<small>細口推奨</small></div>
+                <div class="tool-row"><span class="dot"></span>中挽きの粉<small>付属の粉でOK</small></div>
+              </div>
+              <button class="btn-primary" onclick="startBrew()">抽出をはじめる</button>
+            </div>
+
+            <!-- 3. BREW -->
+            <div class="screen" data-screen="brew">
+              <div class="step-progress" id="stepProgress">STEP 1 / 4 — 蒸らし</div>
+              <div class="pour-stage">
+                <div class="pour-illustration" id="pourIllust">
+                  <svg viewBox="0 0 150 150" class="cone">
+                    <circle cx="75" cy="75" r="70" fill="#F1E9D8"/>
+                    <circle class="fill-disc" id="fillDisc" cx="75" cy="75" r="8" fill="#8A6A54" opacity=".55"/>
+                    <circle cx="75" cy="75" r="70" fill="none" stroke="#E3D6BC" stroke-width="2"/>
+                    <g class="arrow-swirl">
+                      <path d="M75 30 A45 45 0 1 1 40 55" fill="none" stroke="#B27C25" stroke-width="3" stroke-linecap="round"/>
+                      <path d="M40 55 L30 50 L38 42" fill="none" stroke="#B27C25" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <g class="steam">
+                      <path d="M60 55 Q55 40 63 28" fill="none" stroke="#8A6A54" stroke-width="2.5" stroke-linecap="round"/>
+                      <path d="M75 58 Q70 42 78 30" fill="none" stroke="#8A6A54" stroke-width="2.5" stroke-linecap="round"/>
+                      <path d="M90 55 Q85 40 93 28" fill="none" stroke="#8A6A54" stroke-width="2.5" stroke-linecap="round"/>
+                    </g>
+                  </svg>
+                </div>
+                <div class="amount-readout"><span class="cur mono" id="pourFrom">0</span><span class="tgt mono" style="font-size:20px; color:var(--coffee-light);">→</span><span class="cur mono" id="pourTo">30</span><span class="tgt mono">g</span></div>
+              </div>
+              <div class="timer-wrap">
+                <svg class="timer-ring" viewBox="0 0 120 120">
+                  <circle class="timer-bg" cx="60" cy="60" r="52"></circle>
+                  <circle class="timer-progress" id="timerProgress" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="0"></circle>
+                </svg>
+                <div class="timer-center"><span class="num" id="timerNum">--</span><span class="lbl" id="timerLbl">待機</span></div>
+              </div>
+              <div class="phase-label"><span class="phase-pill" id="phasePill">待機中</span></div>
+              <div class="brew-note" id="brewNote">中心から円を描くように、粉全体を湿らせます。</div>
+              <button class="btn-primary" id="pourBtn" onclick="pourAction()">注ぐ準備ができたらタップ</button>
+              <button class="skip-btn" id="skipBtn" style="display:none;" onclick="skipPhase()">この待ち時間をスキップ</button>
+              <button class="btn-ghost" id="nextStepBtn" style="display:none;" onclick="nextBrewStep()">次へ</button>
+            </div>
+
+            <!-- 4. ENJOY -->
+            <div class="screen" data-screen="enjoy">
+              <div class="enjoy-hero"><h3 class="serif">召し上がれ。</h3><p>抽出完了までに約3分。焙煎から数えて2週間目の豆です。</p></div>
+              <div class="column-card"><span class="tag">産地の話</span><h4>エル・ジャガー農園（コスタリカ・タラス地区）</h4><p>標高1,700mの斜面で育つ豆。ハニープロセスは果肉を残したまま乾燥させることで、蜂蜜のような甘みが生まれます。</p></div>
+              <div class="column-card"><span class="tag">バリスタより</span><h4>浅煎りの甘さを引き出す注ぎ方</h4><p>今回は3回に分けてゆっくり注ぐレシピにしました。急がず、渦を描くイメージで注ぐと甘さが際立ちます。</p></div>
+              <div class="column-card"><span class="tag">こんな人には</span><h4>酸味が少し強いと感じたら</h4><p>お湯の温度を2〜3℃下げてみてください。まろやかさが増します。</p></div>
+              <button class="btn-primary" onclick="goScreen('share')">感想をシェアする</button>
+            </div>
+
+            <!-- 5. SHARE -->
+            <div class="screen" data-screen="share">
+              <h3 class="title serif">感じたことを、残す</h3>
+              <div class="flavor-tags" id="flavorTags"></div>
+              <textarea class="comment-input" id="commentInput" placeholder="香りや味、思い出したことを書いてみてください"></textarea>
+              <button class="btn-ghost" onclick="postComment()">投稿する</button>
+              <div id="commentsList" style="display:flex; flex-direction:column; gap:10px;"></div>
+              <button class="btn-primary" onclick="goScreen('record')">記録する</button>
+            </div>
+
+            <!-- 6. RECORD -->
+            <div class="screen" data-screen="record">
+              <h3 class="title serif">飲んだ記録</h3>
+              <div class="spec-grid">
+                <div class="spec-cell"><div class="k">累計杯数</div><div class="v" id="statCups">0杯</div></div>
+                <div class="spec-cell"><div class="k">訪れた産地の数</div><div class="v" id="statOrigins">0ヶ国</div></div>
+              </div>
+              <div class="stamp-grid" id="stampGrid"></div>
+              <div id="historyList"></div>
+              <button class="btn-primary" onclick="goScreen('preference')">好みを登録する</button>
+            </div>
+
+            <!-- 7. PREFERENCE -->
+            <div class="screen" data-screen="preference">
+              <h3 class="title serif">好みを教えてください</h3>
+              <div class="good-row">
+                <span class="label">このジャガーハニーは好みでしたか？<small>次回以降のおすすめ精度に使われます</small></span>
+                <button class="good-btn" id="goodBtn" onclick="toggleGood()">👍 Good</button>
+              </div>
+              <p style="font-size:12.5px; color:var(--coffee-light); margin:0;">選んだ味わいに近い豆が入荷したら、お知らせします。</p>
+              <div class="flavor-tags" id="prefTags"></div>
+              <div class="toggle-row"><span>入荷したら通知する</span><div class="switch" id="notifSwitch" onclick="toggleNotif()"></div></div>
+              <div id="notifPreview" style="display:none;">
+                <div class="notif-preview">
+                  <div class="ic"></div>
+                  <div class="body"><strong>MEGURU</strong><p id="notifText">新着：好みに近いロットが入荷しました。</p></div>
+                </div>
+              </div>
+              <button class="btn-ghost" onclick="resetDemo()">デモを最初から見る</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ANNOTATION -->
+      <div class="annotate">
+        <div class="progress-bar"><div class="fill" id="annProgress" style="width:14%;"></div></div>
+        <div class="stepno" id="annStep">SCREEN 01 / 07</div>
+        <h3 id="annTitle">商品ページ：迷わず選べる分量</h3>
+        <ul id="annList"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Why We Can Do This</div>
+      <h2>ただのECでも、バリスタ単体でもつくれない。<br>デジタルに強い自社だからつくれる。</h2>
+      <p>物販だけのECサイトではこの体験は実現できない。バリスタも、味は生み出せても、それをアプリの体験として全顧客に届ける仕組みは持っていない。ここは、デジタル領域を専門とする自社が担う部分になる。</p>
+    </div>
+    <div class="moat-flow">
+      <div class="moat-box"><div class="k">01 監修</div><p>バリスタが豆ごとの最適な淹れ方を決める。</p></div>
+      <div class="moat-arrow">→</div>
+      <div class="moat-box"><div class="k">02 設計・実装</div><p>自社のデジタル専門性で、抽出データをアプリ体験として設計・実装する。ここが物販ECにもバリスタ単体にもできない部分。</p></div>
+      <div class="moat-arrow">→</div>
+      <div class="moat-box"><div class="k">03 配信</div><p>全顧客のアプリに、同じ体験としてそのまま届く。</p></div>
+    </div>
+    <div class="moat-quote">紙芝居形式で淹れ方がわかるECは今のところない。この体験のわかりやすさは、新規顧客を惹きつける初速のフックになる。<br>普通のECでは、この体験はつくれない。バリスタだけでもここまでは届けられない。デジタル専門の私たちだからこそ実現できる。</div>
+  </div>
+</section>
+
+
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What's Next</div>
+      <h2>まずはこの体験をつくる。その先の広がり方は、複数ある。</h2>
+      <p>「フェーズ1→2→3」と順番を決め切るより、まず土台をつくり、そこに積み上がるデータを見ながら広げ方を選びたい。</p>
+    </div>
+    <div class="foundation-card">
+      <div class="k">今つくるもの</div>
+      <h3>EC + 抽出ガイド体験</h3>
+      <p>一度作って終わりではなく、使われるほど「好み」「感想」「記録」が積み上がっていく土台になる。器具を持っていない人の最初のハードルを下げるため、豆＋最低限の器具（ドリッパー・フィルター）をセットにしたスターターキットもEC上で取り扱う。</p>
+    </div>
+    <div class="branch-head">ここから先、広がり方は複数ある</div>
+    <div class="branch-grid">
+      <div class="branch-card"><h4>定期便（サブスク）</h4><p>蓄積した好みデータをもとに、豆が自動で届く仕組み。</p></div>
+      <div class="branch-card"><h4>リアル店舗</h4><p>体験の集大成として、実店舗での抽出体験を展開する。</p></div>
+      <div class="branch-card"><h4>オリジナル抽出機器</h4><p>スターターキットとしての器具取り扱いから始め、抽出データと利用実態が溜まった先に、この体験に最適化した自社オリジナルの抽出機器を開発する。ECでの器具販売は、その市場性を見極める初期検証にもなる。</p></div>
+    </div>
+    <p class="branch-note">どちらを先に伸ばすか、あるいは同時に検討するかは、土台の利用データを見ながら判断する。順番を今ここで決め切らないことが、このロードマップの意図。オリジナル機器は最も時間のかかる投資になるため、EC上での器具需要と抽出データの蓄積を見ながら着手判断する。</p>
+  </div>
+</section>
+
+<footer>本デモは社内検討用のプロトタイプです。商品名・レシピ・コメントはすべてサンプルです。 — MEGURU Project</footer>
+
+<script>
+const screens = ["product","prep","brew","enjoy","share","record","preference"];
+const eyebrows = {product:"商品ページ", prep:"準備", brew:"抽出", enjoy:"完成", share:"シェア", record:"記録", preference:"好み登録"};
+const annotations = {
+  product:{title:"商品ページ：迷わず選べる分量",list:["杯数を選ぶだけで、粉とお湯の量が自動で決まる","器具や温度の話は次の画面に譲り、まずは選択をシンプルにする","2回目以降・時短したい人向けに、ガイドを飛ばして記録だけ残す導線も用意する"]},
+  prep:{title:"準備画面：家にあるものでいい、と伝える",list:["はかりや温度計がなくても大丈夫、と最初に安心させる","沸騰後の待ち秒数で温度を再現できるようにする（92℃の目安）","器具を持っていない人向けに、豆＋最低限の器具のスターターキットもECで扱う"]},
+  brew:{title:"抽出ガイド：紙芝居形式で迷わせない",list:["1ステップ=1つの動作だけを見せる。注ぐ量・待つ秒数のみ","「注ぐ」と「待つ」を色とラベルで分け、今どちらの動作をしているか一目で分かる","待ち時間はスキップ可能。デモや2回目以降は待たずに先へ進める","円を描くイラストで、注ぎ方まで視覚的に伝える"]},
+  enjoy:{title:"完成画面：味わいながら物語を読む",list:["飲んでいる間に、産地・栽培者・バリスタの意図を知る","体験の付加価値はここで生まれる。豆の情報ではなく、一杯の背景"]},
+  share:{title:"シェア画面：感じたことを言葉にする",list:["味のタグ選択で、感想を書くハードルを下げる","他の人のコメントも見えることで、飲む前後の発見が増える","初期のコメントがゼロで寂しくならないよう、社内メンバーの実際の飲用感想を先行して掲載する方針"]},
+  record:{title:"記録画面：積み重ねが好みをつくる",list:["スタンプカードのように、飲んだ経験が可視化される","累計杯数や訪れた産地の数を見せ、コレクションする楽しさそのものを主役にする","記録は分析用データである以前に、御朱印帳のように振り返って楽しむための体験","レコメンドや商品開発への活用は、あくまで副産物として位置づける"]},
+  preference:{title:"好み登録：次の一杯への導線",list:["この銘柄自体が好みかをGoodボタンで一言で残せる","好みのタグを登録しておくと、近い豆の入荷時に通知が届く","将来的にはこの好みデータがサブスクの設計にもつながる"]}
+};
+
+let cups = 1;
+let currentScreen = "product";
+let brewStepIndex = 0;
+let timerInterval = null;
+
+const stepDefs = [
+  {label:"蒸らし", fraction:0.125, pourSec:10, waitSec:20, note:"中心から円を描くように、粉全体を湿らせます。"},
+  {label:"1投目", fraction:0.375, pourSec:15, waitSec:25, note:"外側に向かって、渦を描くように注ぎます。"},
+  {label:"2投目", fraction:0.625, pourSec:15, waitSec:25, note:"同じリズムで、中心から円を描きます。"},
+  {label:"3投目（最後）", fraction:1.0, pourSec:20, waitSec:30, note:"泡が落ち着くまで、静かに待ちます。"}
+];
+const cupsData = {1:{coffee:15,water:240}, 2:{coffee:30,water:480}};
+const flavorOptions = ["甘さ","フルーティ","キャラメル","ナッツ","酸味","まろやか","華やか","コク"];
+
+function buildDots(){
+  const el = document.getElementById('dots');
+  el.innerHTML = screens.map(s=>`<span class="${s===currentScreen?'on':''}"></span>`).join('');
+}
+
+function goScreen(name){
+  currentScreen = name;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active', s.dataset.screen===name));
+  document.getElementById('phoneEyebrow').textContent = eyebrows[name];
+  buildDots();
+  const idx = screens.indexOf(name);
+  document.getElementById('annProgress').style.width = ((idx+1)/screens.length*100)+'%';
+  document.getElementById('annStep').textContent = 'SCREEN 0'+(idx+1)+' / 0'+screens.length;
+  document.getElementById('annTitle').textContent = annotations[name].title;
+  document.getElementById('annList').innerHTML = annotations[name].list.map(t=>`<li>${t}</li>`).join('');
+  document.getElementById('screen-area-scroll-reset') // no-op safe guard
+  const area = document.querySelector('.screen-area'); if(area) area.scrollTop = 0;
+  if(name==='record') renderRecord();
+}
+
+function setCups(n){
+  cups = n;
+  document.querySelectorAll('.cup-btn').forEach(b=>b.classList.toggle('selected', Number(b.dataset.cups)===n));
+  document.getElementById('prepCoffee').textContent = cupsData[n].coffee+'g';
+  document.getElementById('prepWater').textContent = cupsData[n].water+'ml';
+}
+
+function startBrew(){
+  brewStepIndex = 0;
+  goScreen('brew');
+  loadBrewStep();
+}
+
+function loadBrewStep(){
+  const step = stepDefs[brewStepIndex];
+  const water = cupsData[cups].water;
+  const target = Math.round(step.fraction*water);
+  const prevTarget = brewStepIndex===0 ? 0 : Math.round(stepDefs[brewStepIndex-1].fraction*water);
+  document.getElementById('stepProgress').textContent = `STEP ${brewStepIndex+1} / ${stepDefs.length} — ${step.label}`;
+  document.getElementById('pourFrom').textContent = prevTarget;
+  document.getElementById('pourTo').textContent = target;
+  document.getElementById('brewNote').textContent = step.note;
+  document.getElementById('timerNum').textContent = '--';
+  document.getElementById('timerLbl').textContent = '待機';
+  document.getElementById('phasePill').textContent = '注ぐ準備';
+  document.getElementById('phasePill').className = 'phase-pill';
+  document.getElementById('pourBtn').style.display='block';
+  document.getElementById('pourBtn').disabled=false;
+  document.getElementById('pourBtn').textContent='注ぐ準備ができたらタップ';
+  document.getElementById('skipBtn').style.display='none';
+  document.getElementById('nextStepBtn').style.display='none';
+  document.getElementById('pourIllust').classList.remove('pouring');
+  document.getElementById('pourIllust').classList.remove('waiting');
+  document.getElementById('fillDisc').style.transform = 'scale('+(1+ (prevTarget/water)*7)+')';
+  document.getElementById('timerProgress').className = 'timer-progress';
+  const circ = 326.7;
+  document.getElementById('timerProgress').style.strokeDasharray = circ;
+  document.getElementById('timerProgress').style.strokeDashoffset = 0;
+}
+
+let currentPhaseDone = null; // holds the function to call if skip is pressed
+
+function pourAction(){
+  const step = stepDefs[brewStepIndex];
+  const water = cupsData[cups].water;
+  const target = Math.round(step.fraction*water);
+  document.getElementById('pourBtn').style.display = 'none';
+
+  runPhase('pour', step.pourSec, `${target}gまで注ぐ`, ()=>{
+    document.getElementById('fillDisc').style.transform = 'scale('+(1+(target/water)*7)+')';
+    runPhase('wait', step.waitSec, '蒸らして待つ', ()=>{
+      document.getElementById('timerLbl').textContent = '完了';
+      document.getElementById('phasePill').textContent = '完了';
+      document.getElementById('skipBtn').style.display='none';
+      document.getElementById('nextStepBtn').style.display='block';
+    });
+  });
+}
+
+function runPhase(phase, seconds, noteOverride, onDone){
+  const circ = 326.7;
+  let elapsed = 0;
+  const ring = document.getElementById('timerProgress');
+  const pill = document.getElementById('phasePill');
+  const illust = document.getElementById('pourIllust');
+
+  ring.className = 'timer-progress' + (phase==='wait' ? ' phase-wait' : '');
+  ring.style.strokeDashoffset = 0;
+  pill.textContent = phase==='pour' ? '注ぐ' : '待つ';
+  pill.className = 'phase-pill ' + phase;
+  document.getElementById('timerLbl').textContent = phase==='pour' ? '注湯中' : '蒸らし中';
+  if(noteOverride) document.getElementById('brewNote').textContent = noteOverride;
+  document.getElementById('skipBtn').style.display = 'block';
+  if(phase==='pour'){ illust.classList.add('pouring'); illust.classList.remove('waiting'); } else { illust.classList.remove('pouring'); illust.classList.add('waiting'); }
+
+  clearInterval(timerInterval);
+  currentPhaseDone = onDone;
+
+  function tick(){
+    elapsed++;
+    const remaining = seconds - elapsed;
+    document.getElementById('timerNum').textContent = remaining>0?remaining:0;
+    ring.style.strokeDashoffset = circ*(elapsed/seconds);
+    if(elapsed>=seconds){
+      clearInterval(timerInterval);
+      illust.classList.remove('pouring');
+      illust.classList.remove('waiting');
+      currentPhaseDone = null;
+      onDone();
+    }
+  }
+  timerInterval = setInterval(tick, 1000);
+}
+
+function skipPhase(){
+  clearInterval(timerInterval);
+  document.getElementById('pourIllust').classList.remove('pouring');
+  document.getElementById('pourIllust').classList.remove('waiting');
+  document.getElementById('timerNum').textContent = 0;
+  document.getElementById('timerProgress').style.strokeDashoffset = 326.7;
+  const done = currentPhaseDone;
+  currentPhaseDone = null;
+  if(done) done();
+}
+
+function nextBrewStep(){
+  brewStepIndex++;
+  if(brewStepIndex >= stepDefs.length){
+    goScreen('enjoy');
+  } else {
+    loadBrewStep();
+  }
+}
+
+// ---- Flavor tags (share) ----
+const selectedFlavors = new Set();
+function buildFlavorTags(){
+  const el = document.getElementById('flavorTags');
+  el.innerHTML = flavorOptions.map(f=>`<button class="tag-chip" data-f="${f}" onclick="toggleFlavor(this,'${f}')">${f}</button>`).join('');
+}
+function toggleFlavor(btn,f){
+  if(selectedFlavors.has(f)){selectedFlavors.delete(f); btn.classList.remove('on');}
+  else {selectedFlavors.add(f); btn.classList.add('on');}
+}
+
+const seedComments = [
+  {name:"さとうさん", time:"3日前", text:"オレンジのような香りがすごい。蒸らしの時点で分かった。", tags:["フルーティ","華やか"]},
+  {name:"たなかさん", time:"5日前", text:"はちみつみたいな甘さ。後味がキャラメルっぽくて好き。", tags:["甘さ","キャラメル"]},
+  {name:"やまぐちさん", time:"1週間前", text:"酸味は控えめで飲みやすかった。次は2杯分で淹れてみたい。", tags:["まろやか"]}
+];
+function renderComments(){
+  const el = document.getElementById('commentsList');
+  el.innerHTML = seedComments.map(c=>`
+    <div class="comment-card">
+      <div class="who">${c.name}<small>${c.time}</small></div>
+      <p>${c.text}</p>
+      <div class="flavor-tags">${c.tags.map(t=>`<span class="tag-chip on">${t}</span>`).join('')}</div>
+    </div>`).join('');
+}
+function postComment(){
+  const text = document.getElementById('commentInput').value.trim();
+  if(!text && selectedFlavors.size===0) return;
+  seedComments.unshift({name:"あなた", time:"たった今", text: text||"（コメントなし）", tags:[...selectedFlavors]});
+  document.getElementById('commentInput').value='';
+  renderComments();
+}
+
+// ---- Stamp card (record) ----
+function getStamps(){
+  try{ return JSON.parse(localStorage.getItem('meguru_stamps')||'null') || seedStamps(); }
+  catch(e){ return seedStamps(); }
+}
+function seedStamps(){
+  return [
+    {name:"エチオピア コチェレ", date:"06/12"},
+    {name:"ブラジル セラード", date:"06/20"}
+  ];
+}
+let stampsAddedThisSession = false;
+function renderRecord(){
+  let stamps = getStamps();
+  if(!stampsAddedThisSession){
+    stamps = [...stamps, {name:"コスタリカ ジャガーハニー", date:"今日", isNew:true}];
+    stampsAddedThisSession = true;
+    localStorage.setItem('meguru_stamps', JSON.stringify(stamps.map(({isNew, ...r})=>r)));
+  }
+  const grid = document.getElementById('stampGrid');
+  let cells = '';
+  for(let i=0;i<8;i++){
+    const s = stamps[i];
+    if(s){ cells += `<div class="stamp filled ${s.isNew?'new':''}">☕</div>`; }
+    else { cells += `<div class="stamp"></div>`; }
+  }
+  grid.innerHTML = cells;
+  document.getElementById('historyList').innerHTML = stamps.slice().reverse().map(s=>`
+    <div class="history-row"><span class="name">${s.name}</span><span class="date">${s.date}</span></div>`).join('');
+  document.getElementById('statCups').textContent = stamps.length+'杯';
+  const originCount = new Set(stamps.map(s=>s.name.split(' ')[0])).size;
+  document.getElementById('statOrigins').textContent = originCount+'ヶ国';
+}
+
+// ---- Preference ----
+const selectedPrefs = new Set();
+function buildPrefTags(){
+  const el = document.getElementById('prefTags');
+  el.innerHTML = flavorOptions.map(f=>`<button class="tag-chip" data-f="${f}" onclick="togglePref(this,'${f}')">${f}</button>`).join('');
+}
+function togglePref(btn,f){
+  if(selectedPrefs.has(f)){selectedPrefs.delete(f); btn.classList.remove('on');}
+  else {selectedPrefs.add(f); btn.classList.add('on');}
+  updateNotifText();
+}
+function toggleNotif(){
+  const sw = document.getElementById('notifSwitch');
+  const on = sw.classList.toggle('on');
+  document.getElementById('notifPreview').style.display = on?'block':'none';
+  updateNotifText();
+}
+function updateNotifText(){
+  const tags = [...selectedPrefs];
+  const label = tags.length? tags.slice(0,2).join('・') : '好みの味わい';
+  document.getElementById('notifText').textContent = `新着：${label}に近いロットが入荷しました🍯`;
+}
+
+// ---- Good (this product) ----
+let goodMarked = false;
+function toggleGood(){
+  goodMarked = !goodMarked;
+  const btn = document.getElementById('goodBtn');
+  btn.classList.toggle('on', goodMarked);
+  btn.textContent = goodMarked ? '👍 Good済み' : '👍 Good';
+}
+
+function resetDemo(){
+  brewStepIndex = 0;
+  clearInterval(timerInterval);
+  goodMarked = false;
+  const gb = document.getElementById('goodBtn');
+  if(gb){ gb.classList.remove('on'); gb.textContent = '👍 Good'; }
+  goScreen('product');
+}
+
+// init
+buildFlavorTags();
+buildPrefTags();
+renderComments();
+setCups(1);
+goScreen('product');
+</script>
+</body>
+</html>
