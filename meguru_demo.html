@@ -268,7 +268,7 @@ footer{padding:50px 0; border-top:1px solid var(--line-soft); font-size:12px; co
 
 <nav class="topnav">
   <div class="wrap">
-    <div class="brand">MEGURU<span>.</span></div>
+    <div class="brand">MISAKI<span>.</span></div>
     <div class="topnav-tag">社内検討用デモ / Coffee EC Concept</div>
   </div>
 </nav>
@@ -469,7 +469,7 @@ footer{padding:50px 0; border-top:1px solid var(--line-soft); font-size:12px; co
               <div id="notifPreview" style="display:none;">
                 <div class="notif-preview">
                   <div class="ic"></div>
-                  <div class="body"><strong>MEGURU</strong><p id="notifText">新着：好みに近いロットが入荷しました。</p></div>
+                  <div class="body"><strong>MISAKI</strong><p id="notifText">新着：好みに近いロットが入荷しました。</p></div>
                 </div>
               </div>
               <button class="btn-ghost" onclick="resetDemo()">デモを最初から見る</button>
@@ -548,7 +548,7 @@ footer{padding:50px 0; border-top:1px solid var(--line-soft); font-size:12px; co
   </div>
 </section>
 
-<footer>本デモは社内検討用のプロトタイプです。商品名・レシピ・コメントはすべてサンプルです。 — MEGURU Project</footer>
+<footer>本デモは社内検討用のプロトタイプです。商品名・レシピ・コメントはすべてサンプルです。 — MISAKI Project</footer>
 
 <script>
 const screens = ["product","prep","brew","enjoy","share","record","preference"];
@@ -746,7 +746,7 @@ function postComment(){
 
 // ---- Stamp card (record) ----
 function getStamps(){
-  try{ return JSON.parse(localStorage.getItem('meguru_stamps')||'null') || seedStamps(); }
+  try{ return JSON.parse(localStorage.getItem('MISAKI_stamps')||'null') || seedStamps(); }
   catch(e){ return seedStamps(); }
 }
 function seedStamps(){
@@ -761,7 +761,7 @@ function renderRecord(){
   if(!stampsAddedThisSession){
     stamps = [...stamps, {name:"コスタリカ ジャガーハニー", date:"今日", isNew:true}];
     stampsAddedThisSession = true;
-    localStorage.setItem('meguru_stamps', JSON.stringify(stamps.map(({isNew, ...r})=>r)));
+    localStorage.setItem('MISAKI_stamps', JSON.stringify(stamps.map(({isNew, ...r})=>r)));
   }
   const grid = document.getElementById('stampGrid');
   let cells = '';
